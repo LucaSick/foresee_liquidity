@@ -1,5 +1,5 @@
 import psycopg2
-import psql_constants as psqlc
+import constants.psql_constants as psqlc
 
 
 class Psql:

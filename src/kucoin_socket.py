@@ -1,5 +1,5 @@
 import asyncio
-import currency_constants as curr_const
+import constants.currency_constants as curr_const
 from psql_class import Psql
 import uuid
 from kucoin.client import WsToken
