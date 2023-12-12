@@ -1,5 +1,6 @@
 import asyncio
-import constants.currency_constants as curr_const
+# import foresee_liquidity.constants.currency_constants as curr_const
+import currency_constants as curr_const
 from psql_class import Psql
 import uuid
 from kucoin.client import Market
@@ -12,9 +13,12 @@ async def get_data(market, psql):
     id = uuid.uuid1()
     best_bid = float(res['bestBid'])
     best_ask = float(res['bestAsk'])
+    price = float(res['price'])
     spread = (1 - best_bid / best_ask) * 100
+    slippage = (1 - price / best_ask) * 100
     print(f"INFO: {id}, {first_coin}-{second_coin} spread: {spread}")
-    psql.push_row(id, first_coin, second_coin, spread)
+    if spread - 2 <= slippage <= spread + 2:
+        psql.push_row(id, first_coin, second_coin, spread, slippage)
     await asyncio.sleep(10)
 
 

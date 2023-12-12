@@ -1,5 +1,5 @@
 import psycopg2
-import constants.psql_constants as psqlc
+import psql_constants as psqlc
 
 
 class Psql:
@@ -23,14 +23,15 @@ class Psql:
             id UUID PRIMARY KEY,
             first_coin_name VARCHAR (10) NOT NULL,
             second_coin_name VARCHAR (10) NOT NULL,
-            spread REAL NOT NULL);
+            spread REAL NOT NULL,
+            slippage REAL NOT NULL);
         """)
         self.conn.commit()
 
-    def push_row(self, id, first_coin, second_coin, spread):
+    def push_row(self, id, first_coin, second_coin, spread, slippage):
         self.cur.execute(f"""
-            INSERT INTO {self.platform}(id, first_coin_name, second_coin_name, spread)
-            VALUES ('{id}', '{first_coin}', '{second_coin}', {spread});
+            INSERT INTO {self.platform}(id, first_coin_name, second_coin_name, spread, slippage)
+            VALUES ('{id}', '{first_coin}', '{second_coin}', {spread}, {slippage});
         """)
         self.conn.commit()
 
