@@ -7,15 +7,15 @@ from kucoin.ws_client import KucoinWsClient
 
 
 async def main():
-    async def handle_evt(msg):
-        if '/market/ticker:' in msg['topic']:
-            market: str = msg['topic'].split(':')[-1]
+    async def handle(response):
+        if '/market/ticker:' in response['topic']:
+            market: str = response['topic'].split(':')[-1]
             first_coin = market.split('-')[0]
             second_coin = market.split('-')[-1]
             id = uuid.uuid1()
-            best_bid = float(msg['data']['bestBid'])
-            best_ask = float(msg['data']['bestAsk'])
-            price = float(msg['data']['price'])
+            best_bid = float(response['data']['bestBid'])
+            best_ask = float(response['data']['bestAsk'])
+            price = float(response['data']['price'])
             spread = (1 - best_bid / best_ask) * 100
             slippage = (1 - price / best_ask) * 100
             print(f"INFO: {id}, {first_coin}-{second_coin} spread: {spread}")
@@ -23,7 +23,7 @@ async def main():
                 psql.push_row(id, first_coin, second_coin, spread, slippage)
 
     client = WsToken()
-    ws_client = await KucoinWsClient.create(None, client=client, callback=handle_evt, private=False)
+    ws_client = await KucoinWsClient.create(None, client=client, callback=handle, private=False)
     for currency in curr_const.CURR_ARR:
         await ws_client.subscribe('/market/ticker:' + currency)
     while True:
