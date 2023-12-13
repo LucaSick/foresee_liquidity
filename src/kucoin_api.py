@@ -1,5 +1,5 @@
 import asyncio
-import constants.currency_constants as curr_const
+import constants.kucoin_constants as kucoin_const
 from psql_class import Psql
 import uuid
 from kucoin.client import Market
@@ -23,7 +23,7 @@ async def get_data(market, psql):
 
 async def send_requests(client, psql):
     tasks = []
-    for market in curr_const.CURR_ARR:
+    for market in kucoin_const.CURR_ARR:
         tasks.append(get_data(market, psql))
     await asyncio.gather(*tasks)
     await send_requests(client, psql)
