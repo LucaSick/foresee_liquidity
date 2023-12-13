@@ -26,13 +26,8 @@ def on_open(wsapp):
     subscribe_to_klines(wsapp)
 
 
-def on_message(_wsapp, message):
-    response = json.loads(message)
-    if response.get('k') is None:
-        print(
-            f"ERROR: the data was not recieved correctly for {response.get('e')}")
-        return
-    market: str = response['s']
+def get_data(response):
+    market = response['s']
     id = uuid.uuid1()
     open = float(response['k']['o'])
     close = float(response['k']['c'])
@@ -40,6 +35,16 @@ def on_message(_wsapp, message):
     # low = float(response['data']['candles'][4])
     spread = ((open - close) / open) * 100
     slippage = (open - close) * 0.02
+    return market, id, spread, slippage
+
+
+def on_message(_wsapp, message):
+    response = json.loads(message)
+    if response.get('k') is None:
+        print(
+            f"ERROR: the data was not recieved correctly for {response.get('e')}")
+        return
+    market, id, spread, slippage = get_data(response)
     print(
         f"INFO: Retrieving data for symbol {market}")
     psql.push_row(id, market, spread, slippage)

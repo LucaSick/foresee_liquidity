@@ -22,6 +22,18 @@ def on_open(wsapp):
     print("INFO: All subbed")
 
 
+def get_data(response):
+    market = response['data']['symbol']
+    id = uuid.uuid1()
+    open = float(response['data']['candles'][1])
+    close = float(response['data']['candles'][2])
+    # high = float(response['data']['candles'][3])
+    # low = float(response['data']['candles'][4])
+    spread = ((open - close) / open) * 100
+    slippage = (open - close) * 0.02
+    return market, id, spread, slippage
+
+
 def on_message(_wsapp, message):
     response = json.loads(message)
     if (response['type'] == 'welcome'):
@@ -33,14 +45,7 @@ def on_message(_wsapp, message):
             print(
                 f"ERROR: the data was not recieved correctly: {response}")
             return
-        market: str = response['data']['symbol']
-        id = uuid.uuid1()
-        open = float(response['data']['candles'][1])
-        close = float(response['data']['candles'][2])
-        # high = float(response['data']['candles'][3])
-        # low = float(response['data']['candles'][4])
-        spread = ((open - close) / open) * 100
-        slippage = (open - close) * 0.02
+        market, id, spread, slippage = get_data(response)
         print(
             f"INFO: Retrieving data for symbol {market}")
         psql.push_row(id, market, spread, slippage)
