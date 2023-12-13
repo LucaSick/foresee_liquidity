@@ -3,23 +3,8 @@ import json
 import time
 import uuid
 import constants.kucoin_constants as kucoin_const
+import constants.psql_constants as psql_const
 from psql_class import Psql
-
-
-# def on_open(wsapp):
-#     print("INFO: Connection open")
-#     for market in kucoin_const.CURR_ARR:
-#         topic = f'/market/ticker:{market}'
-#         to_send = {
-#             'type': 'subscribe',
-#             'topic': topic,
-#             'id': int(time.time()),
-#             'return': True,
-#             "privateChannel": False,
-#         }
-#         print(f"INFO: Subbing to {topic}")
-#         wsapp.send(json.dumps(to_send))
-#     print("INFO: All subbed")
 
 
 def on_open(wsapp):
@@ -87,7 +72,7 @@ def on_pong(wsapp, _message):
     wsapp.send(json.dumps(to_send))
 
 
-psql=Psql("kucoin")
+psql=Psql(psql_const.KUCOIN_PLATFORM)
 wsapp=websocket.WebSocketApp(f'wss://ws-api-spot.kucoin.com/?token={kucoin_const.TOKEN}',
                                on_message=on_message,
                                on_open=on_open,

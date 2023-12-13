@@ -3,6 +3,7 @@ import json
 import time
 import uuid
 import constants.binance_constants as bin_const
+import constants.psql_constants as psql_const
 from psql_class import Psql
 
 
@@ -69,7 +70,7 @@ def on_pong(_wsapp, message):
     wsapp.send(message)
 
 
-psql = Psql("binance")
+psql = Psql(psql_const.BINANCE_PLATFORM)
 wsapp = websocket.WebSocketApp("wss://stream.binance.com:443/ws/lucas_stream",
                                on_message=on_message,
                                on_open=on_open,

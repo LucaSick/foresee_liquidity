@@ -1,5 +1,6 @@
 import asyncio
 import constants.kucoin_constants as kucoin_const
+import constants.psql_constants as psql_const
 from psql_class import Psql
 import uuid
 from kucoin.client import Market
@@ -27,6 +28,6 @@ async def send_requests(client, psql):
     await send_requests(client, psql)
 
 
-psql = Psql(platform='kucoin')
+psql = Psql(psql_const.KUCOIN_PLATFORM)
 client = Market()
 asyncio.run(send_requests(client, psql))

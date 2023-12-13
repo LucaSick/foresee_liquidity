@@ -1,19 +1,19 @@
 import psycopg2
-import constants.psql_constants as psqlc
+import constants.psql_constants as psql_const
 
 
 class Psql:
     def __init__(self, platform: str):
-        if platform != "kucoin" and platform != "binance":
-            print("ERROR: Platform must be either kucoin or binance")
+        if platform not in psql_const.PLATFORMS:
+            print(f"ERROR: Platform must be in {psql_const.PLATFORMS}")
             raise ValueError
 
         self.platform = platform
-        self.conn = psycopg2.connect(database=psqlc.DATABASE,
-                                     user=psqlc.USER,
-                                     host=psqlc.HOST,
-                                     password=psqlc.PASSWORD,
-                                     port=psqlc.PORT)
+        self.conn = psycopg2.connect(database=psql_const.DATABASE,
+                                     user=psql_const.USER,
+                                     host=psql_const.HOST,
+                                     password=psql_const.PASSWORD,
+                                     port=psql_const.PORT)
         self.cur = self.conn.cursor()
         self.cur.execute(f"""
             DROP TABLE IF EXISTS {platform}; 
