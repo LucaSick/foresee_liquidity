@@ -18,17 +18,15 @@ def subscribe_to_klines(wsapp):
         {
             "method": "SUBSCRIBE",
             "params": params,
-            "id": 1
+            "id": int(time.time())
         }
     )
-    print("Sending message to server:")
-    print(to_send)
-    time.sleep(1)
+    print(f"INFO: Sending message to server: {to_send}")
     wsapp.send(to_send)
 
 
 def on_open(wsapp):
-    print("connection open")
+    print("INFO: Connection open")
     subscribe_to_klines(wsapp)
 
 
@@ -49,28 +47,24 @@ def on_message(_wsapp, message):
     print(
         f"INFO: Retrieving data for symbol {market}")
     psql.push_row(id, market, spread, slippage)
-    time.sleep(30)
+    time.sleep(10)
 
 
 def on_error(_wsapp, error):
-    print("Received error")
-    print(error)
+    print(f"ERROR: Received error: {error}")
 
 
 def on_close(_wsapp, close_status_code, close_msg):
-    print("Connection close")
-    print(close_status_code)
-    print(close_msg)
+    print(f"INFO: Connection closed: {close_status_code}, {close_msg}")
 
 
 def on_ping(wsapp, message):
-    print("Received ping from server")
-    message = message.replace('PING', 'PONG')
+    print("INFO: Received ping from server")
     wsapp.send(message)
 
 
 def on_pong(_wsapp, message):
-    print("Received pong from server")
+    print("INFO: Received pong from server")
     message = message.replace('PONG', 'PING')
     wsapp.send(message)
 
@@ -82,4 +76,4 @@ if __name__ == "__main__":
                                    on_error=on_error,
                                    on_ping=on_ping,
                                    on_pong=on_pong)
-    wsapp.run_forever(ping_interval=40, ping_timeout=30)
+    wsapp.run_forever(ping_interval=10)

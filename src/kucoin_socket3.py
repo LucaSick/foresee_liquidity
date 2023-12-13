@@ -12,10 +12,9 @@ psql = Psql("kucoin")
 
 
 def on_open(wsapp):
-    print("connection open")
+    print("INFO: Connection open")
     for market in kucoin_const.CURR_ARR:
         topic = f'/market/candles:{market}_1hour'
-        print(topic)
         to_send = {
             'type': 'subscribe',
             'topic': topic,
@@ -23,22 +22,21 @@ def on_open(wsapp):
             'return': True,
             "privateChannel": False,
         }
-        print(f"Subbing to {topic}")
-        print(json.dumps(to_send))
+        print(f"INFO: Subbing to {topic}")
         wsapp.send(json.dumps(to_send))
-    print("All subbed")
+    print("INFO: All subbed")
 
 
 def on_message(_wsapp, message):
     response = json.loads(message)
     if (response['type'] == 'welcome'):
-        print("Welcome")
+        print("INFO: Welcome")
     if (response['type'] == 'ack'):
-        print("Subbed")
+        print("INFO: Subscription is successfull")
     else:
         if (response.get('data') is None or response['data'].get('candles') is None):
             print(
-                f"ERROR: the data was not recieved correctly for {response['topic']}")
+                f"ERROR: the data was not recieved correctly: {response}")
             return
         market: str = response['data']['symbol']
         id = uuid.uuid1()
@@ -51,6 +49,7 @@ def on_message(_wsapp, message):
         print(
             f"INFO: Retrieving data for symbol {market}")
         psql.push_row(id, market, spread, slippage)
+        time.sleep(10)
 
 
 def on_error(_wsapp, error):
@@ -81,4 +80,4 @@ if __name__ == "__main__":
                                    on_error=on_error,
                                    on_ping=on_ping,
                                    on_pong=on_pong)
-    wsapp.run_forever(ping_interval=40, ping_timeout=30)
+    wsapp.run_forever(ping_interval=10)

@@ -5,7 +5,7 @@ import constants.psql_constants as psqlc
 class Psql:
     def __init__(self, platform: str):
         if platform != "kucoin" and platform != "binance":
-            print("Platform must be either kucoin or binance")
+            print("ERROR: Platform must be either kucoin or binance")
             raise ValueError
 
         self.platform = platform
