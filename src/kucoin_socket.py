@@ -14,8 +14,6 @@ async def main():
                     f"ERROR: the data was not recieved correctly for {response['topic']}")
                 return
             market: str = response['data']['symbol']
-            first_coin = market.split('-')[0]
-            second_coin = market.split('-')[-1]
             id = uuid.uuid1()
             open = float(response['data']['candles'][1])
             close = float(response['data']['candles'][2])
@@ -24,8 +22,8 @@ async def main():
             spread = ((open - close) / open) * 100
             slippage = (open - close) * 0.02
             print(
-                f"INFO: Retrieving data for symbol {first_coin}-{second_coin}")
-            psql.push_row(id, first_coin, second_coin, spread, slippage)
+                f"INFO: Retrieving data for symbol {market}")
+            psql.push_row(id, market, spread, slippage)
 
     client = WsToken()
     ws_client = await KucoinWsClient.create(None, client=client, callback=handle, private=False)
