@@ -5,11 +5,6 @@ import uuid
 import constants.kucoin_constants as kucoin_const
 from psql_class import Psql
 
-# If you like to run in debug mode
-
-
-psql = Psql("kucoin")
-
 
 def on_open(wsapp):
     print("INFO: Connection open")
@@ -73,11 +68,11 @@ def on_pong(wsapp, _message):
     wsapp.send(json.dumps(to_send))
 
 
-if __name__ == "__main__":
-    wsapp = websocket.WebSocketApp(f'wss://ws-api-spot.kucoin.com/?token={kucoin_const.TOKEN}',
-                                   on_message=on_message,
-                                   on_open=on_open,
-                                   on_error=on_error,
-                                   on_ping=on_ping,
-                                   on_pong=on_pong)
-    wsapp.run_forever(ping_interval=10)
+psql = Psql("kucoin")
+wsapp = websocket.WebSocketApp(f'wss://ws-api-spot.kucoin.com/?token={kucoin_const.TOKEN}',
+                               on_message=on_message,
+                               on_open=on_open,
+                               on_error=on_error,
+                               on_ping=on_ping,
+                               on_pong=on_pong)
+wsapp.run_forever(ping_interval=10)

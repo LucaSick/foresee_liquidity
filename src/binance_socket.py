@@ -6,10 +6,6 @@ import constants.binance_constants as bin_const
 from psql_class import Psql
 
 
-websocket.enableTrace(False)
-psql = Psql("binance")
-
-
 def subscribe_to_klines(wsapp):
     params = []
     for currency in bin_const.CURR_ARR:
@@ -69,11 +65,11 @@ def on_pong(_wsapp, message):
     wsapp.send(message)
 
 
-if __name__ == "__main__":
-    wsapp = websocket.WebSocketApp("wss://stream.binance.com:443/ws/lucas_stream",
-                                   on_message=on_message,
-                                   on_open=on_open,
-                                   on_error=on_error,
-                                   on_ping=on_ping,
-                                   on_pong=on_pong)
-    wsapp.run_forever(ping_interval=10)
+psql = Psql("binance")
+wsapp = websocket.WebSocketApp("wss://stream.binance.com:443/ws/lucas_stream",
+                               on_message=on_message,
+                               on_open=on_open,
+                               on_error=on_error,
+                               on_ping=on_ping,
+                               on_pong=on_pong)
+wsapp.run_forever(ping_interval=10)
