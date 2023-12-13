@@ -6,16 +6,16 @@ from kucoin.client import Market
 
 
 async def get_data(market, psql):
-    res = client.get_ticker(market)
+    response = client.get_ticker(market)
     id = uuid.uuid1()
-    best_bid = float(res['bestBid'])
-    best_ask = float(res['bestAsk'])
-    price = float(res['price'])
-    spread = (1 - best_bid / best_ask) * 100
-    slippage = (1 - price / best_ask) * 100
-    print(f"INFO: {id}, {market} spread: {spread}")
-    if spread - 2 <= slippage <= spread + 2:
-        psql.push_row(id, market, spread, slippage)
+    bestAsk = float(response['bestAsk'])
+    bestBid = float(response['bestBid'])
+    lastPrice = float(response['price'])
+    spread = ((bestAsk - bestBid) / bestAsk) * 100
+    expected_price = bestBid + (bestAsk - bestBid) * 0.02
+    slippage = ((lastPrice - expected_price) / expected_price) * 100
+    print(f"Add for {market}")
+    psql.push_row(id, market, spread, slippage)
     await asyncio.sleep(10)
 
 
