@@ -6,10 +6,10 @@ import constants.binance_constants as bin_const
 from psql_class import Psql
 
 
-def subscribe_to_klines(wsapp):
+def subscribe_to_tickers(wsapp):
     params = []
     for currency in bin_const.CURR_ARR:
-        params.append(f'{currency.lower()}@kline_3m')
+        params.append(f'{currency.lower()}@ticker')
     to_send = json.dumps(
         {
             "method": "SUBSCRIBE",
@@ -23,24 +23,24 @@ def subscribe_to_klines(wsapp):
 
 def on_open(wsapp):
     print("INFO: Connection open")
-    subscribe_to_klines(wsapp)
+    subscribe_to_tickers(wsapp)
 
 
 def get_data(response):
     market = response['s']
     id = uuid.uuid1()
-    open = float(response['k']['o'])
-    close = float(response['k']['c'])
-    # high = float(response['data']['candles'][3])
-    # low = float(response['data']['candles'][4])
-    spread = ((open - close) / open) * 100
-    slippage = (open - close) * 0.02
+    bestAsk = float(response['a'])
+    bestBid = float(response['b'])
+    lastPrice = float(response['c'])
+    spread = ((bestAsk - bestBid) / bestAsk) * 100
+    expected_price = bestAsk + (bestAsk - bestBid) * 0.02
+    slippage = ((lastPrice - expected_price) / expected_price) * 100
     return market, id, spread, slippage
 
 
 def on_message(_wsapp, message):
     response = json.loads(message)
-    if response.get('k') is None:
+    if response.get('c') is None:
         print(
             f"ERROR: the data was not recieved correctly for {response.get('e')}")
         return
@@ -48,7 +48,6 @@ def on_message(_wsapp, message):
     print(
         f"INFO: Retrieving data for symbol {market}")
     psql.push_row(id, market, spread, slippage)
-    time.sleep(10)
 
 
 def on_error(_wsapp, error):
