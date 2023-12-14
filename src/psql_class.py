@@ -23,14 +23,15 @@ class Psql:
             id UUID PRIMARY KEY,
             market VARCHAR (10) NOT NULL,
             spread REAL NOT NULL,
-            slippage REAL NOT NULL);
+            slippage REAL NOT NULL,
+            time_received TIMESTAMP NOT NULL);
         """)
         self.conn.commit()
 
     def push_row(self, id, market, spread, slippage):
         self.cur.execute(f"""
-            INSERT INTO {self.platform}(id, market, spread, slippage)
-            VALUES ('{id}', '{market}', {spread}, {slippage});
+            INSERT INTO {self.platform}(id, market, spread, slippage, time_received)
+            VALUES ('{id}', '{market}', {spread}, {slippage}, NOW()::TIMESTAMP);
         """)
         self.conn.commit()
 
