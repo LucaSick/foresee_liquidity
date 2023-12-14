@@ -13,7 +13,7 @@ async def get_data(market, psql):
     bestBid = float(response['bestBid'])
     lastPrice = float(response['price'])
     spread = ((bestAsk - bestBid) / bestAsk) * 100
-    expected_price = bestBid + (bestAsk - bestBid) * 0.02
+    expected_price = bestBid * 0.02
     slippage = ((lastPrice - expected_price) / expected_price) * 100
     print(f"Add for {market}")
     psql.push_row(id, market, spread, slippage)

@@ -15,7 +15,7 @@ async def main():
         bestBid = float(response['data']['bestBid'])
         lastPrice = float(response['data']['price'])
         spread = ((bestAsk - bestBid) / bestAsk) * 100
-        expected_price = bestBid + (bestAsk - bestBid) * 0.02
+        expected_price = bestBid * 1.02
         slippage = ((lastPrice - expected_price) / expected_price) * 100
         return market, id, spread, slippage
 
