@@ -1,3 +1,4 @@
 kucoin-python==1.0.14
 psycopg2==2.9.3
 uuid==1.30
+websocket-client==1.7.0

@@ -1,6 +1,6 @@
 USER = "market"
 PASSWORD = "12345"
-HOST = "localhost"
+HOST = "postgres"
 DATABASE = "market_db"
 PORT = 5432
 KUCOIN_PLATFORM = "kucoin"

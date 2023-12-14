@@ -40,7 +40,7 @@ def on_message(_wsapp, message):
         print("INFO: Welcome")
     if (response['type'] == 'ack'):
         print("INFO: Subscription is successfull")
-    else:
+    elif (response['type'] == 'message'):
         if response.get('data') is None:
             print(
                 f"ERROR: the data was not recieved correctly: {response}")

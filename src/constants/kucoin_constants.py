@@ -1,7 +1,7 @@
 # This file contains Kucoin constants
 
 # Token
-TOKEN = "2neAiuYvAU61ZDXANAGAsiL4-iAExhsBXZxftpOeh_55i3Ysy2q2LEsEWU64mdzUOPusi34M_wGoSf7iNyEWJ3Tw8Jn4ipO1KvYYOLhUkSL5RzS52v26A9iYB9J6i9GjsxUuhPw3BlrzazF6ghq4L4I7X2JJRjIXh9Lzsfngb6k=.HtKnNVbeikowLI0b5laYnw=="
+TOKEN = "2neAiuYvAU61ZDXANAGAsiL4-iAExhsBXZxftpOeh_55i3Ysy2q2LEsEWU64mdzUOPusi34M_wGoSf7iNyEWJ_1R657FZwIEWJ2BncDdl0k6z08GFPEkMNiYB9J6i9GjsxUuhPw3BlrzazF6ghq4L4OyCEE64h_fz5rVBrhNGl0=.Ppx58kx-9F4QJC3HkD8vlQ=="
 
 # URI
 MARKET_KLINES = 'wss://ws-api-spot.kucoin.com/market/candles:'
